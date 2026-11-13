@@ -1,0 +1,7 @@
+{
+  "mahoun/agents/base_agent.py": 400,
+  "mahoun/agents/claim_agent.py": 400,
+  "mahoun/reasoning/ultra_reasoning_service.py": 300,
+  "output/base_generator.py": 40,
+  "output/claim_generator.py": 35
+}

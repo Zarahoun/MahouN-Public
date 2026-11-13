@@ -1,0 +1,40 @@
+طرح تقویت تست‌های Integration
+=================================
+
+تست‌های امروز (22 سپتامبر):
+1. test_ner_integration.py (16:03)
+2. test_citation_semantic_type_extraction.py (15:48)
+3. test_graph_script_policy.py (13:23)
+4. test_canonical_cli_ingestion_real.py (11:10)
+
+تقویت‌های پیشنهادی:
+======================
+
+1. NER Integration - اضافه کنید:
+   - Adversarial inputs (XSS, SQL injection)
+   - Unicode attacks (RTL, zero-width)
+   - Performance tests (backtracking, massive data)
+   - False positive detection
+   - Cross-lingual confusion
+
+2. Citation Semantic Type - اضافه کنید:
+   - Ambiguous patterns (AMENDS+REPEALS together)
+   - Negation handling
+   - Circular citations
+   - Context window exploitation
+   - Whitelist hardening
+
+3. Graph Script Policy - اضافه کنید:
+   - Bypass fuzzing
+   - Dynamic imports
+   - Monkey patching
+   - Race conditions
+   
+4. CLI Ingestion - اضافه کنید:
+   - Concurrent stress
+   - Memory leaks
+   - Network partitions
+   - Byzantine failures
+   - Rollback testing
+
+فایل test_ner_integration_hardened.py ساخته شد ✓

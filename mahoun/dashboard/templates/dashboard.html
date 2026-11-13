@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAHOUN Observability Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">MAHOUN Observability Dashboard</h1>
+        
+        <!-- Health Status -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">System Health</h2>
+            <div id="health-status" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Health data will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Metrics Charts -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Metrics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-medium mb-2">Request Latency</h3>
+                    <canvas id="latency-chart"></canvas>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-2">Request Count</h3>
+                    <canvas id="count-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Traces -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Recent Traces</h2>
+            <div id="traces-list" class="space-y-2">
+                <!-- Traces will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Agent Latency Leaderboard -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Agent Latency Leaderboard</h2>
+            <div id="agent-latency" class="space-y-2">
+                <!-- Agent data will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Profiler Stats -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Profiler Statistics</h2>
+            <div id="profiler-stats">
+                <!-- Profiler data will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function loadDashboard() {
+            try {
+                // Load health
+                const health = await fetch('/internal/dashboard/api/health').then(r => r.json());
+                document.getElementById('health-status').innerHTML = `
+                    <div class="p-4 bg-${health.overall_healthy ? 'green' : 'red'}-100 rounded">
+                        <div class="font-semibold">Overall: ${health.overall_healthy ? 'Healthy' : 'Unhealthy'}</div>
+                        <div>Uptime: ${(health.uptime_seconds / 3600).toFixed(2)} hours</div>
+                        <div>CPU: ${health.cpu_percent.toFixed(1)}%</div>
+                        <div>Memory: ${(health.memory_bytes / 1024 / 1024).toFixed(2)} MB</div>
+                    </div>
+                `;
+                
+                // Load metrics
+                const metrics = await fetch('/internal/dashboard/api/metrics').then(r => r.json());
+                // TODO: Render charts
+                
+                // Load traces
+                const traces = await fetch('/internal/dashboard/api/traces').then(r => r.json());
+                const tracesHtml = traces.traces.slice(0, 5).map(trace => `
+                    <div class="p-3 bg-gray-50 rounded">
+                        <div class="font-medium">${trace.name}</div>
+                        <div class="text-sm text-gray-600">Duration: ${trace.duration_ms?.toFixed(2) || 0}ms</div>
+                        <div class="text-sm text-gray-600">Spans: ${trace.spans?.length || 0}</div>
+                    </div>
+                `).join('');
+                document.getElementById('traces-list').innerHTML = tracesHtml;
+                
+                // Load agent latency
+                const agents = await fetch('/internal/dashboard/api/agent-latency').then(r => r.json());
+                const agentsHtml = agents.agents.map(agent => `
+                    <div class="p-3 bg-gray-50 rounded flex justify-between">
+                        <span class="font-medium">${agent.name}</span>
+                        <span>P95: ${agent.p95_latency_ms.toFixed(2)}ms</span>
+                    </div>
+                `).join('');
+                document.getElementById('agent-latency').innerHTML = agentsHtml;
+                
+                // Load profiler
+                const profiler = await fetch('/internal/dashboard/api/profiler').then(r => r.json());
+                document.getElementById('profiler-stats').innerHTML = `
+                    <div class="p-4 bg-gray-50 rounded">
+                        <div>Total Operations: ${profiler.stats?.total_operations || 0}</div>
+                        <div>Slow Operations: ${profiler.stats?.slow_operations || 0}</div>
+                        <div>Avg Wall Time: ${((profiler.stats?.avg_wall_time || 0) * 1000).toFixed(2)}ms</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+            }
+        }
+        
+        // Load on page load
+        loadDashboard();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(loadDashboard, 5000);
+    </script>
+</body>
+</html>
+

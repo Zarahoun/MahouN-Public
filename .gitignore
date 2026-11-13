@@ -1,0 +1,879 @@
+# ============================================================================
+# MAHOUN Platform - Security-Hardened .gitignore
+# ============================================================================
+# CLASSIFICATION: MISSION-CRITICAL / PUBLIC-RELEASE-READY
+# PURPOSE: Prevent exposure of sensitive data, credentials, and proprietary logic
+# ============================================================================
+
+# ============================================================================
+# CRITICAL SECURITY: CREDENTIALS & SECRETS (NEVER COMMIT)
+# ============================================================================
+
+# Environment files with secrets
+.env
+.env.*
+!.env.example
+!.env.backend.example
+*.env
+*.env.local
+*.env.production
+*.env.staging
+*.env.development
+
+# API Keys & Tokens
+**/api_keys.txt
+**/api_keys.json
+**/*_api_key*
+**/*_token*
+**/*_secret*
+**/*_password*
+**/credentials.json
+**/credentials.yaml
+**/credentials.yml
+**/auth_config.*
+**/oauth_config.*
+
+# SSH & Cryptographic Keys
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.csr
+*.cer
+*.der
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+*.pub
+!*.pub.example
+secrets/
+.secrets/
+private/
+.private/
+
+# Cloud Provider Credentials
+**/.aws/credentials
+**/.aws/config
+**/.azure/credentials
+**/.gcloud/credentials
+**/gcp-credentials.json
+**/aws-credentials.json
+**/azure-credentials.json
+
+# Database Credentials
+**/database.ini
+**/db_config.json
+**/db_credentials.*
+**/connection_strings.*
+
+# MCP & AI Service Keys
+**/mcp_keys.*
+**/openai_key.*
+**/anthropic_key.*
+**/huggingface_token.*
+**/.cursor/mcp.json
+**/.kiro/settings/mcp.json
+
+# ============================================================================
+# PROPRIETARY LOGIC & INTELLECTUAL PROPERTY
+# ============================================================================
+
+# Proprietary algorithms (if marked as confidential)
+**/proprietary/
+**/confidential/
+**/internal/
+**/*_proprietary.*
+**/*_confidential.*
+
+# Business logic documentation (if sensitive)
+**/business_logic/
+**/trade_secrets/
+
+# Customer data & PII
+**/customer_data/
+**/pii/
+**/personal_data/
+**/user_data/
+**/patient_data/
+**/medical_records/
+
+# Legal & compliance documents (if sensitive)
+**/legal/internal/
+**/compliance/internal/
+**/audit/internal/
+
+# ============================================================================
+# PYTHON BUILD ARTIFACTS
+# ============================================================================
+
+__pycache__/
+**/__pycache__/
+*/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+*$py.class
+*.so
+*.dylib
+*.dll
+.Python
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+wheels/
+pip-wheel-metadata/
+*.manifest
+*.spec
+tests/**/__pycache__/
+tests/__pycache__/
+
+# ============================================================================
+# TESTING & COVERAGE
+# ============================================================================
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+coverage.xml
+*.cover
+.basedpyright/
+test-results/
+test-reports/
+junit.xml
+pytest_results.xml
+
+# ============================================================================
+# VIRTUAL ENVIRONMENTS
+# ============================================================================
+
+venv/
+env/
+ENV/
+.venv/
+venv*/
+.venv*/
+env*/
+virtualenv/
+.virtualenv/
+pipenv/
+.pipenv/
+poetry.lock.local
+
+# ============================================================================
+# IDE & EDITOR FILES
+# ============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+.emacs.desktop
+.emacs.desktop.lock
+
+# Sublime Text
+*.sublime-*
+.sublime-project
+.sublime-workspace
+
+# Eclipse
+.project
+.pydevproject
+.settings/
+.classpath
+
+# Cursor AI
+.cursor/
+!.cursor/.gitkeep
+
+# Kiro AI
+.kiro/
+!.kiro/steering/
+!.kiro/specs/
+.kilo/
+
+# DeepSeek / AI Caches
+.deepseek/
+.aider/
+.copilot/
+
+# ============================================================================
+# OPERATING SYSTEM FILES
+# ============================================================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.fseventsd
+.TemporaryItems
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# DATABASE FILES & DATA STORES
+# ============================================================================
+
+# SQLite
+*.sqlite3
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
+
+# Neo4j
+neo4j_data/
+**/neo4j/data/
+**/neo4j/logs/
+**/neo4j/import/
+**/neo4j/plugins/
+
+# Vector Stores
+vector_store_data/
+**/chroma_db/
+**/faiss_index/
+**/pinecone_data/
+**/weaviate_data/
+**/qdrant_data/
+
+# Redis
+dump.rdb
+appendonly.aof
+
+# PostgreSQL
+*.pgdata/
+pg_data/
+
+# ============================================================================
+# RUNTIME DATA & CACHES
+# ============================================================================
+
+# Application runtime
+runtime/
+data/
+output/
+uploads/
+downloads/
+temp/
+tmp/
+cache/
+.cache/
+
+# Models & Weights
+models/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.h5
+*.pkl
+*.pickle
+model_cache/
+huggingface_cache/
+transformers_cache/
+
+# Embeddings
+embeddings/
+**/embeddings_cache/
+
+# ============================================================================
+# LOGS & MONITORING
+# ============================================================================
+
+# Log files
+*.log
+*.log.*
+logs/
+log/
+*.out
+*.err
+
+# Monitoring data
+monitoring/data/
+prometheus_data/
+grafana_data/
+metrics/
+traces/
+spans/
+
+# Profiling
+*.prof
+*.profile
+*.pstats
+
+# ============================================================================
+# DOCKER & CONTAINERS
+# ============================================================================
+
+# Docker volumes
+docker_volumes/
+**/docker/volumes/
+
+# Docker Compose overrides (may contain secrets)
+docker-compose.override.yml
+docker-compose.local.yml
+
+# ============================================================================
+# JUPYTER & NOTEBOOKS
+# ============================================================================
+
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+Untitled*.ipynb
+*-checkpoint.ipynb
+
+# ============================================================================
+# FRONTEND & CLIENT-SIDE
+# ============================================================================
+
+# Frontend build artifacts and dependencies
+frontend/*
+!frontend/src/
+frontend/src/*
+!frontend/src/api/
+!frontend/src/components/
+!frontend/src/test/
+frontend/src/api/*
+!frontend/src/api/alerting.ts
+!frontend/src/api/quality.ts
+frontend/src/components/*
+!frontend/src/components/AlertManagementPage.tsx
+!frontend/src/components/GraphQualityDashboard.tsx
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/out/
+frontend/.cache/
+
+# ============================================================================
+# DOCUMENTATION BUILD ARTIFACTS
+# ============================================================================
+
+docs/_build/
+docs/.doctrees/
+site/
+.mkdocs_cache/
+
+# ============================================================================
+# BACKUP & TEMPORARY FILES
+# ============================================================================
+
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+\#*\#
+
+# Archived backups
+archived_backups/
+
+# ============================================================================
+# COMPRESSED ARCHIVES
+# ============================================================================
+
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.rar
+*.7z
+*.gz
+*.bz2
+*.xz
+
+# ============================================================================
+# CI/CD & DEPLOYMENT
+# ============================================================================
+
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform/
+.terraform.lock.hcl
+
+# Kubernetes secrets
+**/k8s/secrets/
+**/kubernetes/secrets/
+*-secret.yaml
+*-secret.yml
+
+# Helm
+**/charts/*.tgz
+
+# Ansible
+*.retry
+**/ansible/vault_pass.txt
+
+# ============================================================================
+# MAHOUN PRIVATE: AI AGENT CONFIGURATIONS (NEVER PUBLIC)
+# ============================================================================
+
+# AI Agent directories - contain proprietary prompts and workflows
+.claude/
+.kiro/
+.kilo/
+.qoder/
+.cursor/
+.windsurf/
+.aider/
+.copilot/
+
+# Agent configuration files
+**/agent-config.json
+**/agent-settings.json
+**/mcp.json
+**/mcp-config.json
+
+# ============================================================================
+# MAHOUN PRIVATE: INTERNAL DOCUMENTATION (NEVER PUBLIC)
+# ============================================================================
+
+# Internal analysis and forensic reports
+*FORENSIC*.md
+FORENSIC_*.md
+*_FORENSIC_*.md
+
+# Internal phase documentation
+*PHASE_*.md
+PHASE_*.md
+
+# Executive summaries and internal reports
+*EXECUTIVE_SUMMARY*.md
+EXECUTIVE_SUMMARY_*.md
+
+# Completion reports
+*_COMPLETE.md
+*_COMPLETION_*.md
+
+# Internal documentation
+*_INTERNAL*.md
+*INTERNAL_*.md
+INTERNAL_*.md
+
+# Manifests and internal configs
+core_manifest.yaml
+non_core_manifest.yaml
+internal_manifest.*
+
+# Agent rules and internal guidelines
+Agentrules.md
+AgentRules.md
+*_agent_rules.md
+
+# ============================================================================
+# MAHOUN PRIVATE: DATA & MODELS (NEVER PUBLIC)
+# ============================================================================
+
+# Training and production data
+data/
+!data/judgment_graph_schema.cypher
+datasets/
+training_data/
+test_data/
+production_data/
+
+# Model weights and checkpoints
+models/
+model_weights/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.h5
+*.pkl
+*.pickle
+
+# Vector stores and embeddings
+vector_store_data/
+embeddings/
+embeddings_cache/
+chroma_db/
+faiss_index/
+pinecone_data/
+weaviate_data/
+qdrant_data/
+
+# User uploads and outputs
+uploads/
+downloads/
+output/
+outputs/
+results/
+
+# Runtime data
+runtime/
+runtime_data/
+cache_data/
+
+# Ledger data (may contain sensitive transactions)
+ledger/
+ledger_data/
+
+# ============================================================================
+# MAHOUN PRIVATE: ARCHIVES & REPORTS (NEVER PUBLIC)
+# ============================================================================
+
+# Archives
+archive/
+archives/
+old/
+legacy/
+deprecated/
+backup/
+backups/
+
+# Internal reports (only sensitive ones)
+# reports/ is now allowed for multi-IDE development
+internal_reports/
+
+# Old report directories (before Sep 14, 2026)
+docs/reports/
+
+# ============================================================================
+# MAHOUN PRIVATE: TEMPORARY TEST FILES (NEVER PUBLIC)
+# ============================================================================
+
+# Root-level test files (temporary)
+/test_*.py
+!/tests/
+!/tests/**
+tests/**/__pycache__/
+*.pyc
+reasoning_tests.log
+test_results_*.log
+test_output_*.txt
+*.report.md
+ENVIRONMENT_CANONICALIZATION_REPORT.md
+SECURITY_GOVERNANCE_REPORT.md
+
+# ============================================================================
+# PROJECT-SPECIFIC EXCLUSIONS
+# ============================================================================
+
+# MAHOUN-specific
+/net-commander
+proof_pack/
+
+# Experimental / WIP
+experimental/
+wip/
+scratch/
+sandbox/
+
+# ============================================================================
+# ALLOW CRITICAL EXAMPLES & TEMPLATES
+# ============================================================================
+
+# Explicitly allow example files
+!.env.example
+!.env.backend.example
+!config.example.json
+!credentials.example.json
+!docker-compose.example.yml
+
+# ============================================================================
+# END OF ORIGINAL SECURITY-HARDENED .gitignore
+# ============================================================================
+
+# Devin worktrees
+KingMahouN-main-*
+KingMahouN-task-*
+
+# ============================================================================
+# LARGE DATA FILES (NEVER PUSH)
+# ============================================================================
+
+# Model weights and GGUF files
+*.gguf
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.h5
+*.pkl
+*.pickle
+
+# Legal corpus data files (source data, not committed)
+LAWS/data/
+LAWS/*.pdf
+LAWS/*.doc
+LAWS/*.docx
+LAWS/*.txt
+qavanin poli banki/
+qachaq/
+پولشویی/
+
+# Data directories
+data/
+!data/judgment_graph_schema.cypher
+
+# Backup dumps and logs
+backups/
+logs/
+logs/**/*.log
+logs/**/*.txt
+
+# Large JSON reports
+reports/*.json
+reports/*.log
+!reports/ci_perf_baseline.json
+
+# Enterprise software packages
+*.deb
+*.rpm
+*.msi
+*.exe
+
+# Additional heavy files/directories to ignore
+frontend/node_modules/
+architecture_reports/
+build/
+LAWS/
+.git-rewrite/
+coverage.json
+uv.lock
+PRODUCTION_USAGE_REPORT.json
+audit_scan_results.json
+
+# ============================================================================
+# WORKTREES & EMBEDDED GIT REPOS (NEVER COMMIT)
+# ============================================================================
+
+# Temporary worktrees (embedded git repositories)
+.worktrees/
+.kilo/worktrees/
+worktrees/
+**/worktrees/
+
+# Backup worktrees
+backup/commit-*/
+backup/consolidation-*/
+
+# Consolidation backups
+.consolidation_backups/
+.entity_feature_merge_backups/
+
+# Lock files from git operations
+*.lock
+.git/MERGE_HEAD
+
+# ============================================================================
+# SECTION 12 ADDITIONS: AI AGENT TOOL CACHES & RUNTIME DATABASES
+# (Rules not covered by the sections above)
+# ============================================================================
+
+# .antigravity and .antigravitycli — AI agent tool state (not tracked above)
+.antigravity/
+.antigravitycli/
+
+# .bob — AI agent tool state
+.bob/
+
+# .vibe — AI agent tool state
+.vibe/
+
+# .ai — ADR/migration internal decisions directory (private to this workspace)
+.ai/
+
+# .mahoun — runtime SQLite authorization DB (case_authorization.db)
+# PRIVATE: contains runtime authorization state, not source code
+.mahoun/
+
+# constitution/ — runtime kernel attestation and manifest snapshots
+# These are runtime artifacts (kernel.attestation.json, kernel.lock, etc.),
+# not the constitutional source docs which live in mahoun/constitutional/.
+# Owner must decide whether to track these; default: exclude runtime artifacts.
+constitution/
+
+# .crush — AI tool database (crush.db, crush.db-shm, crush.db-wal)
+# Already covered by .crush/.gitignore but adding explicit root rule for safety
+.crush/
+
+# mahoun/data/ — runtime SQLite monitoring databases and their backups
+# (phase1_monitoring.db and timestamped backups: PRIVATE runtime data)
+mahoun/data/
+
+# vector_store_data/ — ChromaDB SQLite and vector JSON (already in section above,
+# reinforcing with explicit subpath pattern)
+vector_store_data/
+
+# contribution_service/storage/staging.db — staging runtime database
+contribution_service/storage/staging.db
+contribution_service/storage/*.db
+
+# tests/vector_store_data/ — test ChromaDB artifacts (tracked file exists)
+tests/vector_store_data/
+
+# debug/ — temporary debug and investigation scripts/artifacts
+debug/
+
+# reports/mahoun_v2_* subdirectories — private audit subdirs with internal forensic output
+reports/mahoun_v2_audit/
+reports/mahoun_v2_candidate_corpus/
+reports/mahoun_v2_forensic_audit_*/
+reports/mahoun_v2_master_audit/
+reports/mahoun_v2_preconstruction_hardening/
+reports/mahoun_v2_preliminary/
+reports/phase2_*/
+reports/clean_reconstruction_*/
+
+# reports/BrutalPatent/ — patent application drafts (highly proprietary IP)
+# Owner must explicitly decide before exposing these
+reports/BrutalPatent/
+
+# reports/patent/ — raw patent filing documents (docx, txt)
+reports/patent/
+
+# reports/patent_candidates/ — proprietary patent candidate evidence packages
+reports/patent_candidates/
+
+# Large provenance / audit JSON dumps in reports/ (multi-MB runtime evidence)
+reports/nonsemantic_provenance_evidence_*.json
+reports/provenance_backfill_dry_run_*.json
+reports/PRODUCTION_USAGE_REPORT.json
+reports/coverage.json
+reports/MAHOUNN_LEGAL_KNOWLEDGE_GRAPH_BENCHMARK.json
+reports/dependency_forensics_report.txt
+reports/WEAK_MODULE_REPORT.json
+
+# graphify-out/ — graph export working directory
+graphify-out/
+
+# graph_comparison/ — graph diff/comparison artifacts
+graph_comparison/
+
+# runtime/ — runtime artifacts directory
+runtime/
+
+# output/ — generated output artifacts
+output/
+
+# uploads/ — user-uploaded documents (may contain private legal texts)
+uploads/
+
+# ledger/ — ledger data directory (tracked JSON exists but runtime data must not leak)
+ledger/*.json
+
+# evidence/ — internal evidence artifacts
+evidence/
+
+# .venv/ — secondary virtual environment (already in venv/ rule above)
+.venv/
+
+# ============================================================================
+# SECTION 1 ADDITIONS: Additional .env variants not covered above
+# ============================================================================
+
+# .env.enterprise — real enterprise config (confirmed present, 6964 bytes)
+# Already matched by .env.* but adding explicit rule for clarity
+.env.enterprise
+
+# .env.local — local developer overrides (confirmed present)
+# Already matched by .env.* above
+
+# ============================================================================
+# SECTION 7 ADDITIONS: htmlcov and test artifacts
+# ============================================================================
+
+# htmlcov/ — HTML coverage reports (already in section 4 but reinforcing)
+htmlcov/
+
+# mahoun.egg-info/ — Python egg metadata (already in section above)
+mahoun.egg-info/
+
+# .mypy_cache/, .ruff_cache/ — already in section 4; reinforcing root-level
+.mypy_cache/
+.ruff_cache/
+
+# ============================================================================
+# SECTION 11 ADDITIONS: Additional IDE/tool directories
+# ============================================================================
+
+# .cursor/ — Cursor AI tool directory (already above but root symlink exists)
+.cursor
+
+# .vscode/ — VS Code workspace settings (confirmed present)
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# ============================================================================
+# SECTION 10 ADDITIONS: Docker Kubernetes secrets
+# ============================================================================
+
+# helm/ — Helm charts directory (review before exposing)
+# Only secret values files; keep chart source
+helm/**/secrets.yaml
+helm/**/secret-values.yaml
+helm/**/*-secret.yaml
+
+# ============================================================================
+# GITIGNORE AUDIT METADATA
+# Last updated: 2024-11 by MAHOUN gitignore-audit workflow step
+# Validation: All sections tested with git check-ignore -v
+# Source files preserved: mahoun/, api/, tests/, ci/, scripts/, docs/, services/
+# ============================================================================
+reports/
+docs/
+CREDENTIALS.txt
+credential_*.txt
+neo4j_credential_*.txt

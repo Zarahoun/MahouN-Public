@@ -1,0 +1,146 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["mahoun", "api", "reasoning_logic"]
+
+[tool.setuptools.package-data]
+mahoun = [
+    "dashboard/templates/**/*",
+    "dashboard/static/**/*"
+]
+
+
+[project]
+name = "mahoun"
+version = "0.1.0"
+description = "MAHOUN Cognitive Legal AI Platform"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Proprietary" }
+
+authors = [
+  { name = "Mahoun Team" }
+]
+
+dependencies = [
+  "pydantic>=2.6",
+  "numpy>=1.24.0",
+  "python-dateutil>=2.8.0",
+  "python-dotenv>=1.0.0",
+  "tqdm>=4.66.0",
+  "fastapi>=0.104.0",
+  "uvicorn[standard]>=0.24.0",
+  "lark>=1.1.9",
+]
+
+[project.optional-dependencies]
+
+graph = [
+  "neo4j>=5.18",
+]
+
+rag = [
+  "sentence-transformers>=2.2.0",
+  "chromadb>=0.4.0",
+  "faiss-cpu>=1.7.4",
+  "rank-bm25>=0.2.2",
+]
+
+llm = [
+  "torch>=2.1.0",
+  "transformers>=4.36.0",
+  "accelerate>=0.25.0",
+  "bitsandbytes>=0.41.0",
+  "sentencepiece>=0.1.99",
+  "protobuf>=3.20.0",
+]
+
+monitoring = [
+  "prometheus-client>=0.19.0",
+  "redis>=5.0.0",
+  "loguru>=0.7.0",
+  "requests>=2.31.0",  # For PagerDuty/Slack webhooks
+]
+
+security = [
+  "slowapi>=0.1.9",
+  "python-jose[cryptography]>=3.3.0",
+  "passlib[bcrypt]>=1.7.4",
+  "bcrypt==4.0.1",  # Explicit pin for passlib 1.7.4 compatibility
+  "cryptography>=41.0.0",  # AES-256-GCM encryption
+  "PyNaCl>=1.5.0",  # Ed25519 signing
+  "redis>=5.0.0",  # Distributed locks
+]
+
+full = [
+  "mahoun[graph]",
+  "mahoun[rag]",
+  "mahoun[llm]",
+  "mahoun[monitoring]",
+  "mahoun[security]",
+]
+
+dev = [
+  "pytest>=7.4.0",
+  "pytest-asyncio>=0.21.0",
+  "pytest-cov>=4.1.0",
+  "pytest-timeout>=2.1.0",
+  "pypdf>=4.0.0",
+  "mypy>=1.7.0",
+  "ruff>=0.1.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+norecursedirs = ["venv", ".git", ".agent", "models", "archive", "reports", "build", "../..", "tests/quarantine"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"
+markers = [
+  "benchmark: Performance and throughput benchmarks for country-scale load.",
+  "graph_native: Tests that enforce Mahoun's graph-native reasoning contract",
+  "unit: Fast unit tests with no external dependencies",
+  "integration: Tests that require external services (databases, APIs, etc.)",
+  "slow: Tests that are slow to run (large data, complex computations)",
+  "p0: Release-blocking critical test",
+  "p1: High-priority test",
+  "p2: Standard-priority regression test",
+  "e2e: End-to-end tests covering complete production pipelines",
+  "governance: Tests for governance enforcement and authorization",
+  "adversarial: Adversarial tests for fail-closed security and boundary invariants",
+  "semantic: Tests for semantic expansion and decision persistence",
+  "persistence: Tests for persistence wiring and storage behavior",
+  "neo4j: Tests requiring a live Neo4j service"
+]
+
+[tool.ruff]
+ignore = ["E402", "UP042", "N818", "E501", "W291"]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".kilo",
+    "MAHOUN_v2_clean",
+    "build",
+    "dist",
+    "venv",
+    "archive",
+    "backups",
+]
+
+# Set the maximum line length
+line-length = 120

@@ -1,0 +1,303 @@
+# Bootstrap Architecture Contract (Machine-Readable)
+# Version: 1.0.0
+# Status: FROZEN - Changes require ADR + Constitutional approval
+# Purpose: Executable architecture contract for CI validation
+
+version: "1.0.0"
+snapshot_date: "2026-08-05"
+contract_status: "FROZEN"
+
+# ============================================================================
+# PHASE EXECUTION ORDER (IMMUTABLE)
+# ============================================================================
+phase_execution_order:
+  - RUNTIME_INTEGRITY
+  - CONFIGURATION
+  - GOVERNANCE_KERNEL
+  - IMMUTABLE_LEDGER
+  - NEO4J
+  - POLICY_ENGINE
+  - EMBEDDING_MODELS
+  - LLM_LOADER
+  - AGENT_REGISTRY
+  - SERVICES
+  - API
+  - READINESS_GATE
+
+# ============================================================================
+# PHASE DEPENDENCY GRAPH (DAG)
+# ============================================================================
+phase_dependencies:
+  RUNTIME_INTEGRITY:
+    depends_on: []
+    description: "Runtime integrity and system capability detection"
+    
+  CONFIGURATION:
+    depends_on: [RUNTIME_INTEGRITY]
+    description: "Configuration loading and validation"
+    
+  GOVERNANCE_KERNEL:
+    depends_on: [CONFIGURATION]
+    description: "Governance kernel initialization (CRITICAL BARRIER)"
+    
+  IMMUTABLE_LEDGER:
+    depends_on: [GOVERNANCE_KERNEL]
+    description: "Immutable audit ledger initialization"
+    
+  NEO4J:
+    depends_on: [GOVERNANCE_KERNEL]
+    description: "Neo4j graph database connection"
+    
+  POLICY_ENGINE:
+    depends_on: [NEO4J]
+    description: "Policy engine initialization"
+    
+  EMBEDDING_MODELS:
+    depends_on: [GOVERNANCE_KERNEL, NEO4J]
+    description: "Embedding models loading"
+    
+  LLM_LOADER:
+    depends_on: [EMBEDDING_MODELS]
+    description: "LLM model loading and initialization"
+    
+  AGENT_REGISTRY:
+    depends_on: [LLM_LOADER]
+    description: "Agent registry population"
+    
+  SERVICES:
+    depends_on: [AGENT_REGISTRY, NEO4J]
+    conditional_dependencies:
+      - name: RAG
+        required: false
+    description: "Service layer initialization"
+    
+  API:
+    depends_on: [SERVICES, NEO4J, GOVERNANCE_KERNEL]
+    description: "FastAPI application setup"
+    
+  READINESS_GATE:
+    depends_on: [API]
+    description: "Final readiness validation"
+
+# ============================================================================
+# BOOTSTRAP CONTEXT CONTRACT
+# ============================================================================
+context_mutations:
+  RUNTIME_INTEGRITY:
+    key: "runtime_info"
+    type: "RuntimeInfo"
+    immutable_after_phase: true
+    
+  CONFIGURATION:
+    key: "config"
+    type: "ConfigurationState"
+    immutable_after_phase: true
+    
+  GOVERNANCE_KERNEL:
+    key: "governance_controller"
+    type: "UnifiedGovernanceController"
+    immutable_after_phase: true
+    
+  IMMUTABLE_LEDGER:
+    key: "immutable_ledger"
+    type: "ImmutableLedger"
+    immutable_after_phase: true
+    
+  NEO4J:
+    key: "neo4j_connection"
+    type: "Neo4jConnection"
+    immutable_after_phase: true
+    
+  POLICY_ENGINE:
+    key: "policy_engine"
+    type: "PolicyEngine"
+    immutable_after_phase: true
+    
+  EMBEDDING_MODELS:
+    key: "embedding_service"
+    type: "LocalEmbeddingService"
+    immutable_after_phase: true
+    
+  LLM_LOADER:
+    key: "model_manager"
+    type: "ModelManager"
+    immutable_after_phase: true
+    
+  AGENT_REGISTRY:
+    key: "agent_registry"
+    type: "AgentRegistry"
+    immutable_after_phase: true
+    
+  SERVICES:
+    key: "services"
+    type: "ServiceRegistry"
+    immutable_after_phase: true
+    
+  API:
+    key: "api_state"
+    type: "APIState"
+    immutable_after_phase: true
+    
+  READINESS_GATE:
+    key: "readiness_report"
+    type: "ReadinessReport"
+    immutable_after_phase: true
+
+# ============================================================================
+# STATE MACHINE CONTRACT
+# ============================================================================
+allowed_states:
+  - CREATED
+  - VALIDATING
+  - INITIALIZING
+  - RUNNING
+  - COMPLETED
+  - FAILED
+  - ROLLING_BACK
+  - ROLLED_BACK
+  - TERMINATED
+
+state_transitions:
+  - from: CREATED
+    to: VALIDATING
+    trigger: "Bootstrap start"
+    reversible: true
+    
+  - from: VALIDATING
+    to: INITIALIZING
+    trigger: "Prerequisites pass"
+    reversible: true
+    
+  - from: VALIDATING
+    to: FAILED
+    trigger: "Prerequisites fail"
+    reversible: false
+    
+  - from: INITIALIZING
+    to: RUNNING
+    trigger: "Resources allocated"
+    reversible: true
+    
+  - from: INITIALIZING
+    to: FAILED
+    trigger: "Resource allocation fails"
+    reversible: false
+    
+  - from: RUNNING
+    to: COMPLETED
+    trigger: "Phase success"
+    reversible: false
+    
+  - from: RUNNING
+    to: FAILED
+    trigger: "Phase error"
+    reversible: false
+    
+  - from: FAILED
+    to: ROLLING_BACK
+    trigger: "Rollback triggered"
+    reversible: false
+    
+  - from: ROLLING_BACK
+    to: ROLLED_BACK
+    trigger: "Undo journal complete"
+    reversible: false
+    
+  - from: ROLLED_BACK
+    to: TERMINATED
+    trigger: "Cleanup complete"
+    reversible: false
+
+forbidden_transitions:
+  - from: COMPLETED
+    to: FAILED
+    reason: "Cannot fail after success"
+    
+  - from: ROLLED_BACK
+    to: RUNNING
+    reason: "Cannot restart after rollback"
+    
+  - from: TERMINATED
+    to: "*"
+    reason: "Terminal state - no transitions allowed"
+
+# ============================================================================
+# CRITICAL INVARIANTS
+# ============================================================================
+invariants:
+  - name: "governance_first"
+    rule: "GOVERNANCE_KERNEL must complete before phases 5+"
+    enforcement: "hard"
+    
+  - name: "fail_closed"
+    rule: "Any phase failure stops entire bootstrap"
+    enforcement: "hard"
+    
+  - name: "single_initialization"
+    rule: "Each phase runs exactly once"
+    enforcement: "hard"
+    
+  - name: "sequential_execution"
+    rule: "No parallel phase execution"
+    enforcement: "hard"
+    
+  - name: "rollback_order"
+    rule: "Rollback in reverse of execution order"
+    enforcement: "hard"
+    
+  - name: "context_immutability"
+    rule: "Previous phases' context cannot be modified"
+    enforcement: "hard"
+    
+  - name: "service_registry_append_only"
+    rule: "Services only added, never removed (except rollback)"
+    enforcement: "hard"
+
+# ============================================================================
+# REFACTORING CONSTRAINTS
+# ============================================================================
+refactoring_rules:
+  allowed_changes:
+    - "Internal executor implementation"
+    - "Service extraction to separate classes"
+    - "Coordinator pattern adoption"
+    - "Descriptor decomposition"
+    - "Rollback journal implementation"
+    
+  forbidden_changes:
+    - "Phase execution order"
+    - "Phase dependencies"
+    - "Context mutation points"
+    - "Service registry keys"
+    - "Rollback order"
+    - "Exception propagation"
+    - "Governance checkpoints"
+    - "Observable behavior (logs, metrics, events)"
+
+# ============================================================================
+# VALIDATION RULES FOR CI
+# ============================================================================
+validation_rules:
+  - name: "phase_order_unchanged"
+    type: "sequence_check"
+    target: "phase_execution_order"
+    
+  - name: "no_circular_dependencies"
+    type: "dag_validation"
+    target: "phase_dependencies"
+    
+  - name: "context_ownership_unique"
+    type: "uniqueness_check"
+    target: "context_mutations"
+    
+  - name: "state_machine_valid"
+    type: "state_machine_validation"
+    target: "state_transitions"
+    
+  - name: "no_forbidden_transitions"
+    type: "blacklist_check"
+    target: "forbidden_transitions"
+    
+  - name: "invariants_enforced"
+    type: "invariant_check"
+    target: "invariants"

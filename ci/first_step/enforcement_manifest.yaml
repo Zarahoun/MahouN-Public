@@ -1,0 +1,195 @@
+# Enforcement Surface Manifest (Phase G)
+# ========================================
+# This manifest enumerates the authoritative enforcement surface of the
+# MahouN project. It is used by scripts/check_enforcement_integrity.py
+# to detect unauthorized weakening of the enforcement chain.
+#
+# Each entry specifies:
+#   path: relative to repo root
+#   type: gate | checker | hook | ci | test | manifest | documentation
+#   required_patterns: list of strings that MUST appear in the file
+#     (detects comment-out, unconditional success, removal)
+#   required_for: which phase(s) require this file
+
+enforcement_surface:
+  - path: ci/first_step/gate_0_integrity.sh
+    type: gate
+    required_patterns:
+      - "NotImplementedError"
+      - "Repo Integrity"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_1_lint.sh
+    type: gate
+    required_patterns:
+      - "ruff"
+      - "Lint check"
+    required_for: [pre-commit]
+
+  - path: ci/first_step/gate_2_types.sh
+    type: gate
+    required_patterns:
+      - "mypy"
+      - "Type Safety"
+    required_for: [pre-commit]
+
+  - path: ci/first_step/gate_3_reality.sh
+    type: gate
+    required_patterns:
+      - "pytest first_step_ci_cd"
+      - "MAHOUN_TEST_MODE"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_4_antimock.sh
+    type: gate
+    required_patterns:
+      - "gate_4b_frontend_antimock.sh"
+      - "Anti-Mock"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_4b_frontend_antimock.sh
+    type: gate
+    required_patterns:
+      - "B1:"
+      - "fabrication marker"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_5_determinism.sh
+    type: gate
+    required_patterns:
+      - "Determinism"
+      - "pytest first_step_ci_cd"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_6_artifacts.sh
+    type: gate
+    required_patterns:
+      - "reality_report.json"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_7_architecture.sh
+    type: gate
+    required_patterns:
+      - "check_boundaries.py"
+      - "Architecture"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_8_contracts.sh
+    type: gate
+    required_patterns:
+      - "tests/contracts"
+      - "Contract"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_9_governance.sh
+    type: gate
+    required_patterns:
+      - "tests/governance"
+      - "GovernanceLock"
+      - "test_kernel_runtime_adversarial.py"
+    required_for: [pre-push]
+
+  - path: tests/test_kernel_runtime_adversarial.py
+    type: test
+    required_patterns:
+      - "adversarial"
+      - "GovernanceContext"
+      - "def test_"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_9_mypy_non_regression.sh
+    type: gate
+    required_patterns:
+      - "check_mypy_non_regression"
+    required_for: [pre-push]
+
+  - path: ci/first_step/gate_10_constitutional_integrity.sh
+    type: gate
+    required_patterns:
+      - "mahoun/constitutional"
+      - "SEAL"
+    required_for: [pre-push, ci]
+
+  - path: ci/gate_md_count.sh
+    type: gate
+    required_patterns:
+      - "MAX_MD_FILES"
+    required_for: [pre-commit, pre-push]
+
+  - path: scripts/validate_governance_compliance.py
+    type: checker
+    required_patterns:
+      - "GovernanceValidator"
+      - "_authorized_write_ctx"
+    required_for: [pre-push]
+
+  - path: scripts/check_boundaries.py
+    type: checker
+    required_patterns:
+      - "BoundaryChecker"
+      - "core_manifest"
+    required_for: [pre-push]
+
+  - path: scripts/check_api_contracts.py
+    type: checker
+    required_patterns:
+      - "APIContractChecker"
+      - "backend_index"
+    required_for: [pre-push, ci]
+
+  - path: scripts/git-hooks/pre-push
+    type: hook
+    required_patterns:
+      - "gate_9_governance.sh"
+      - "validate_governance_compliance.py"
+      - "gate_md_count.sh"
+      - "gate_10_constitutional_integrity.sh"
+      - "gate_4b_frontend_antimock.sh"
+      - "check_api_contracts.py"
+    required_for: [pre-push]
+
+  - path: .pre-commit-config.yaml
+    type: hook
+    required_patterns:
+      - "gate_1_lint.sh"
+      - "gate_2_types.sh"
+      - "gate_4b_frontend_antimock.sh"
+      - "gate_md_count.sh"
+    required_for: [pre-commit]
+
+  - path: ci/first_step/.constitutional_manifest.sha256
+    type: manifest
+    required_patterns: []
+    required_for: [pre-push]
+
+  - path: ci/first_step/.constitutional_manifest.seal
+    type: manifest
+    required_patterns: []
+    required_for: [pre-push]
+
+  - path: first_step_ci_cd/test_5_anti_mock.py
+    type: test
+    required_patterns:
+      - "has_real_implementation"
+      - "TestClaimGeneratorAntiMock"
+    required_for: [pre-push]
+
+  - path: first_step_ci_cd/test_5b_frontend_anti_mock.py
+    type: test
+    required_patterns:
+      - "TestFrontendFabricationDetected"
+      - "TestFrontendCleanNotFlagged"
+    required_for: [pre-push]
+
+  - path: AGENTS.md
+    type: documentation
+    required_patterns:
+      - "fabrication-check-ok"
+      - "gate_4b_frontend_antimock"
+      - "gate_10"
+      - "check_api_contracts"
+      - "check_enforcement_integrity"
+      - "EARLY FEEDBACK"
+      - "LOCAL PUSH ENFORCEMENT"
+      - "AUTHORITATIVE ENFORCEMENT"
+    required_for: [documentation]
