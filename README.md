@@ -129,8 +129,8 @@ User Query → Vector Search → GPT-4 → "Generate an answer" → ❌
 
 #### 📝 یادداشت‌های تخصصی:
 
-**Legora (آلمان):**
-- متمرکز بر قوانین اتحادیه اروپا (GDPR, Compliance)
+**Legora (سوئد):**
+- متمرکز بر قوانین اتحادیه اروپا و قوانین اسکاندیناوی (GDPR, Compliance)
 - از Graph Database استفاده می‌کند اما **فاقد Temporal Intelligence**
 - عمدتاً ابزار جستجو است، نه موتور استدلال
 - پشتیبانی محدود از زبان‌های غیرلاتین
